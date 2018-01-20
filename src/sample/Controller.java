@@ -66,6 +66,7 @@ public class Controller {
 
     public void onStopAction(ActionEvent actionEvent) {
         Port.getInstance().close();
+        Port.getInstance().Stop=true;
         log.appendText("Port has been closed...\n");
         stopBtn.setDisable(true);
         startBtn.setDisable(false);
@@ -80,6 +81,9 @@ public class Controller {
 
     public void onSelectCom(ActionEvent actionEvent) {
         if (null != com.getSelectionModel().getSelectedItem()){
+
+            if (null == chosenCom)
+                chosenCom = "";
 
             if ( !chosenCom.equals(com.getSelectionModel().getSelectedItem()) ) {
                 chosenCom = com.getSelectionModel().getSelectedItem();
