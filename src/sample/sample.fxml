@@ -17,7 +17,7 @@
    <bottom>
       <HBox prefHeight="4.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="startBtn" mnemonicParsing="false" onAction="#onStartAction" text="START">
+            <Button fx:id="startBtn" mnemonicParsing="false" onAction="#onStartAction" prefHeight="27.0" prefWidth="60.0" text="START">
                <HBox.margin>
                   <Insets bottom="10.0" left="15.0" right="10.0" top="10.0" />
                </HBox.margin>
@@ -25,22 +25,22 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </Button>
-            <Button fx:id="stopBtn" mnemonicParsing="false" onAction="#onStopAction" text="STOP">
+            <Button fx:id="stopBtn" mnemonicParsing="false" onAction="#onStopAction" prefHeight="27.0" prefWidth="69.0" text="CLEAR">
                <HBox.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                  <Insets bottom="10.0" right="10.0" top="10.0" />
                </HBox.margin>
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </Button>
-            <VBox prefHeight="47.0" prefWidth="173.0">
+            <VBox prefHeight="47.0" prefWidth="139.0">
                <children>
                   <Label alignment="CENTER" prefHeight="17.0" prefWidth="150.0" text="COM port:" textAlignment="CENTER">
                      <VBox.margin>
                         <Insets left="5.0" right="5.0" top="5.0" />
                      </VBox.margin>
                   </Label>
-                  <ComboBox fx:id="com" onAction="#onSelectCom" onMouseClicked="#onListPorts" prefHeight="25.0" prefWidth="152.0">
+                  <ComboBox fx:id="com" onAction="#onSelectCom" onMouseClicked="#onListPorts" prefHeight="25.0" prefWidth="121.0">
                      <VBox.margin>
                         <Insets bottom="5.0" left="5.0" right="5.0" />
                      </VBox.margin>
