@@ -71,20 +71,20 @@ public class Controller {
 
     private float calculateTime(long impulses) {
         float time=impulses/(16*frequency);
-        if (time>1000){
-            time=time/1000;
-            units="s";
-        }
-        else if(time<1){
-            time=time*1000;
-            units="us";
+        if (time<0.000001){
+            time=time*1000000000;
+            units="ns";
         }
         else if(time<0.001){
             time=time*1000000;
-            units="ns";
+            units="us";
+        }
+        else if(time<1){
+            time=time*1000;
+            units="ms";
         }
         else{
-            units="ms";
+            units="s";
         }
         return time;
     }
