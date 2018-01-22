@@ -2,14 +2,17 @@ package sample;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import purejavacomm.CommPortIdentifier;
 
+import java.net.URL;
 import java.util.Enumeration;
+import java.util.ResourceBundle;
 
 
-public class Controller {
+public class Controller implements Initializable{
 
     @FXML
     private TextArea log;
@@ -21,8 +24,16 @@ public class Controller {
     private Button startBtn;
     @FXML
     private Button stopBtn;
+    @FXML
+    private Button openBtn;
+    @FXML
+    private RadioButton internal;
+    @FXML
+    private RadioButton external;
 
     private String chosenCom;
+
+    final ToggleGroup group = new ToggleGroup();
 
     private String units;
 
@@ -50,23 +61,14 @@ public class Controller {
     }
 
     public void onStartAction(ActionEvent actionEvent) {
-        if(null!=com.getSelectionModel().getSelectedItem()){
-            String comPort = com.getSelectionModel().getSelectedItem();
-            Port.getInstance().open(comPort);
-            Port.getInstance().sendStart();
-            long impulses=Port.getInstance().readTime();
-            float time=calculateTime(impulses);
-            log("Estimated time is: "+time+" " +units +"\n");
-            Port.getInstance().sendStop();
-            Port.getInstance().close();
+        Port.getInstance().SendRead((byte)69);
+        long impulses = Port.getInstance().readTime();
+        if (impulses != 0) {
+            float time = calculateTime(impulses);
+            log("Estimated time is: " + time + " " + units + "\n");
         }
-        else{
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("COM port has not been chosen");
-            alert.setHeaderText("To open the port you have to choose a COM port");
-            alert.setContentText("Please, choose a COM port");
-            alert.showAndWait();
-        }
+        Port.getInstance().SendStop();
+
     }
 
     private float calculateTime(long impulses) {
@@ -118,5 +120,47 @@ public class Controller {
         {
             com.getItems().add(ports.nextElement().getName());
         }
+    }
+
+    public void onOpen(ActionEvent actionEvent) {
+        if(openBtn.getText().equals("OPEN")){
+            if(null!=com.getSelectionModel().getSelectedItem()) {
+                String comPort = com.getSelectionModel().getSelectedItem();
+                Port.getInstance().open(comPort);
+                openBtn.setText("CLOSE");
+                startBtn.setDisable(false);
+            }
+            else{
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("COM port has not been chosen");
+                alert.setHeaderText("To open the port you have to choose a COM port");
+                alert.setContentText("Please, choose a COM port");
+                alert.showAndWait();
+            }
+        }
+        else{
+                Port.getInstance().close();
+                openBtn.setText("OPEN");
+                startBtn.setDisable(true);
+        }
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        internal.setToggleGroup(group);
+        external.setToggleGroup(group);
+        internal.setSelected(true);
+        startBtn.setDisable(true);
+    }
+
+    public void onChooseMode(ActionEvent actionEvent) {
+        if(!internal.isSelected()){
+            Port.getInstance().SendComment(new Commend((byte)96,(byte)0));
+        }
+        else{
+            Port.getInstance().SendComment(new Commend((byte)96,(byte)1));
+
+        }
+        Port.getInstance().SendStop();
     }
 }

@@ -71,15 +71,6 @@ public class Port {
         }
     }
 
-    public void sendStart(){
-        try{
-            serialPort.getOutputStream().write(66);
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     private byte readOneByte(){
         byte oneByte;
 
@@ -101,47 +92,55 @@ public class Port {
             Stop=false;
             while (!Stop)
             {
-                data = readOneByte();
+                try {
+                    data = readOneByte();
 
-                if ( 0 > data )
-                {
-                    break;
-                }
-                if (data==1){
-                    numberOfBytes++;
-                    while(numberOfBytes!=0){
-                        switch(numberOfBytes){
-                            case 1:
-                                data=readOneByte();
-                                unsignedData=(data&0xFF);
-                                time=time|(unsignedData<<32);
-                                numberOfBytes++;
-                                break;
-                            case 2:
-                                data=readOneByte();
-                                unsignedData=(data&0xFF);
-                                time=time|(unsignedData<<24);
-                                numberOfBytes++;
-                                break;
-                            case 3:
-                                data=readOneByte();
-                                unsignedData=(data&0xFF);
-                                time=time|(unsignedData<<16);                            numberOfBytes++;
-                                break;
-                            case 4:
-                                data=readOneByte();
-                                unsignedData=(data&0xFF);
-                                time=time|(unsignedData<<8);                            numberOfBytes++;
-                                break;
-                            case 5:
-                                data=readOneByte();
-                                unsignedData=(data&0xFF);
-                                time=time|(unsignedData);
-                                numberOfBytes=0;
-                                Stop=true;
-                                break;
+                    if (0 > data) {
+                        break;
+                    }
+                    if (data == 1) {
+                        numberOfBytes++;
+                        while (numberOfBytes != 0) {
+                            switch (numberOfBytes) {
+                                case 1:
+                                    data = readOneByte();
+                                    unsignedData = (data & 0xFF);
+                                    time = time | (unsignedData << 32);
+                                    numberOfBytes++;
+                                    break;
+                                case 2:
+                                    data = readOneByte();
+                                    unsignedData = (data & 0xFF);
+                                    time = time | (unsignedData << 24);
+                                    numberOfBytes++;
+                                    break;
+                                case 3:
+                                    data = readOneByte();
+                                    unsignedData = (data & 0xFF);
+                                    time = time | (unsignedData << 16);
+                                    numberOfBytes++;
+                                    break;
+                                case 4:
+                                    data = readOneByte();
+                                    unsignedData = (data & 0xFF);
+                                    time = time | (unsignedData << 8);
+                                    numberOfBytes++;
+                                    break;
+                                case 5:
+                                    data = readOneByte();
+                                    unsignedData = (data & 0xFF);
+                                    time = time | (unsignedData);
+                                    numberOfBytes = 0;
+                                    Stop = true;
+                                    break;
+                            }
                         }
                     }
+
+                }
+                catch(Exception exe){
+                    Controller.getInstance().log("Unable to receive data, try again \n");
+                    return 0;
                 }
             }
         }
@@ -149,11 +148,28 @@ public class Port {
         return time;
     }
 
-    public void sendStop() {
+    public void SendComment(Commend commend){
         try{
-            serialPort.getOutputStream().write(0);
+            serialPort.getOutputStream().write(commend.type);
+            serialPort.getOutputStream().write(commend.value);
+
         }
         catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void SendRead(byte b) {
+        try {
+            serialPort.getOutputStream().write(b);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void SendStop(){
+        try {
+            serialPort.getOutputStream().write(0);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
