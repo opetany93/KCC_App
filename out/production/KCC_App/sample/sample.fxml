@@ -17,9 +17,14 @@
    <bottom>
       <HBox prefHeight="4.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
+            <Button fx:id="openBtn" mnemonicParsing="false" onAction="#onOpen" prefHeight="31.0" prefWidth="47.0" text="OPEN">
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" top="10.0" />
+               </HBox.margin>
+            </Button>
             <Button fx:id="startBtn" mnemonicParsing="false" onAction="#onStartAction" prefHeight="27.0" prefWidth="60.0" text="START">
                <HBox.margin>
-                  <Insets bottom="10.0" left="15.0" right="10.0" top="10.0" />
+                  <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
                </HBox.margin>
                <padding>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -33,7 +38,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
             </Button>
-            <VBox prefHeight="47.0" prefWidth="139.0">
+            <VBox prefHeight="47.0" prefWidth="83.0">
                <children>
                   <Label alignment="CENTER" prefHeight="17.0" prefWidth="150.0" text="COM port:" textAlignment="CENTER">
                      <VBox.margin>
@@ -65,4 +70,16 @@
          </children>
       </VBox>
    </top>
+   <right>
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label prefHeight="17.0" prefWidth="99.0" text="Choose trigger" />
+            <RadioButton fx:id="internal" mnemonicParsing="false" onAction="#onChooseMode" text="Internal" />
+            <RadioButton fx:id="external" mnemonicParsing="false" onAction="#onChooseMode" text="External" />
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
+      </VBox>
+   </right>
 </BorderPane>
