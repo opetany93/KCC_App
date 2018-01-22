@@ -24,6 +24,10 @@ public class Controller {
 
     private String chosenCom;
 
+    private String units;
+
+    float frequency=200000000;
+
     private static volatile Controller ControllerInstance;
 
     public Controller(){
@@ -49,11 +53,12 @@ public class Controller {
         if(null!=com.getSelectionModel().getSelectedItem()){
             String comPort = com.getSelectionModel().getSelectedItem();
             Port.getInstance().open(comPort);
-            Port.getInstance().startReceiving();
-            startBtn.setDisable(true);
-            stopBtn.setDisable(false);
-            com.setDisable(true);
-            label.setText("Click the STOP button to close the port and stop receiving data");
+            Port.getInstance().sendStart();
+            long impulses=Port.getInstance().readTime();
+            float time=calculateTime(impulses);
+            log("Estimated time is: "+time+" " +units +"\n");
+            Port.getInstance().sendStop();
+            Port.getInstance().close();
         }
         else{
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -64,15 +69,28 @@ public class Controller {
         }
     }
 
+    private float calculateTime(long impulses) {
+        float time=impulses/(16*frequency);
+        if (time<0.000001){
+            time=time*1000000000;
+            units="ns";
+        }
+        else if(time<0.001){
+            time=time*1000000;
+            units="us";
+        }
+        else if(time<1){
+            time=time*1000;
+            units="ms";
+        }
+        else{
+            units="s";
+        }
+        return time;
+    }
+
     public void onStopAction(ActionEvent actionEvent) {
-        Port.getInstance().close();
-        Port.getInstance().Stop=true;
-        log.appendText("Port has been closed...\n");
-        stopBtn.setDisable(true);
-        startBtn.setDisable(false);
-        com.setDisable(false);
-        Port.getInstance().StopAll=true;
-        label.setText("Click the START button to open the port and start receiving data");
+        log.clear();
     }
 
     public void log(String text) {
